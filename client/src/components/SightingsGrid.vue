@@ -1,10 +1,10 @@
 <template lang="html">
 	<div id="sightingsGrid">
-		<div class="sighting" v-for="sighting in sightings" v-model="item">
+		<div class="sighting" v-for="sighting in sightings">
 			<h2>{{ sighting.species }}</h2>
 			<p>{{ sighting.location }} on {{ sighting.date|format }}</p>
 
-			<button @click="deleteSighting">Delete Sighting</button>
+			<button @click="deleteSighting(sighting._id)">Delete Sighting</button>
 		</div>
 	</div>
 </template>
@@ -16,21 +16,16 @@ import sightingsService from '@/services/sightingsService.js'
 export default {
 	name: "sightings-grid",
 	props: ["sightings"],
-	data(){
-		return {
-			item: {}
-		}
-	},
 	filters: {
 		format(value){
 			return new Date(value).toLocaleString().substring(0, 10);
 		}
 	},
 	methods: {
-		deleteSighting(){
+		deleteSighting(id){
 			console.log(this.item)
-			sightingsService.deleteSighting(this.item._id)
-			  .then(() => eventBus.$emit('sighting-deleted', this.item._id))
+			sightingsService.deleteSighting(id)
+			  .then(() => eventBus.$emit('sighting-deleted', id))
 		}
 
 	}
